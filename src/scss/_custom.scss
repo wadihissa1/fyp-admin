@@ -1,0 +1,29 @@
+// src/assets/scss/_custom.scss
+
+// Override the primary color
+$primary: #0F5CA8; // New primary color (example: a shade of blue)
+
+// You can also override other colors if needed
+$secondary: #79aaff;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+$light: #f8f9fa;
+$dark: #343a40;
+
+.custom-sidebar-header {
+    background-color: #ffffff; /* Change this to your desired background color */
+    color: #fbfbfb; /* Change this to your desired text color */
+    padding: 10px; /* Adjust padding as needed */
+  }
+  
+  .custom-sidebar {
+    background-color: #0F5CA8 !important; /* Change this to your desired background color */
+    color: #fff !important;/* Change this to your desired text color */
+  }
+  
+  
+
+// Import CoreUI variables and styles
+@import "@coreui/coreui/scss/coreui";
