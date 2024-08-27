@@ -1,120 +1,221 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react'
 import {
-  CAvatar,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilPeople } from '@coreui/icons';
-
-import avatar1 from 'src/assets/images/avatars/1.jpg';
-import 'src/scss/_custom.scss';
-import MainChart from './MainChart'; // Import MainChart component
+  CButton,
+  CForm,
+  CFormLabel,
+  CFormInput,
+  CAlert,
+  CSpinner,
+} from '@coreui/react'
+import 'src/scss/_custom.scss'
+import axios from 'axios'
+import config from '/config'
 
 const Dashboard = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [pdfFile, setPdfFile] = useState(null)
+  const [websiteLink, setWebsiteLink] = useState('')
+  const [websiteLink2, setWebsiteLink2] = useState('') // New state for Website Link 2
+  const [videoLink, setVideoLink] = useState('') // Changed state to store video link instead of file
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    // Static data for testing
-    const data = [
-      {
-        name: 'John Doe',
-        email: 'john@example.com',
-        lastActivity: '2024-06-28T10:00:00Z',
-        signIns: ['2024-06-25', '2024-06-25', '2024-06-26', '2024-06-27', '2024-06-28'],
-      },
-      {
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        lastActivity: '2024-06-27T11:00:00Z',
-        signIns: ['2024-06-26', '2024-06-27', '2024-06-27'],
-      },
-      {
-        name: 'Sam Wilson',
-        email: 'sam@example.com',
-        lastActivity: '2024-06-26T09:00:00Z',
-        signIns: ['2024-06-25', '2024-06-25', '2024-06-26', '2024-06-26', '2024-06-26', '2024-06-27', '2024-06-28'],
-      },
-      {
-        name: 'Alice Johnson',
-        email: 'alice@example.com',
-        lastActivity: '2024-06-25T14:00:00Z',
-        signIns: ['2024-06-25', '2024-06-25', '2024-06-26', '2024-06-27'],
-      },
-      {
-        name: 'Bob Brown',
-        email: 'bob@example.com',
-        lastActivity: '2024-06-24T16:00:00Z',
-        signIns: ['2024-06-24', '2024-06-25', '2024-06-26', '2024-06-27', '2024-06-28', '2024-06-28'],
-      },
-    ];
-    setUsers(data);
-    setLoading(false);
-  }, []);
+  const handlePdfChange = (e) => {
+    const file = e.target.files[0]
+    if (file && file.type !== 'application/pdf') {
+      setError('Please upload a valid PDF file.')
+      setPdfFile(null)
+    } else {
+      setError('')
+      setPdfFile(file)
+    }
+  }
+
+  const handleWebsiteLinkChange = (e) => {
+    setWebsiteLink(e.target.value)
+  }
+
+  const handleWebsiteLink2Change = (e) => {
+    setWebsiteLink2(e.target.value)
+  }
+
+  const handleVideoLinkChange = (e) => {
+    setVideoLink(e.target.value)
+  }
+
+  const handleStartEmbedding = async () => {
+    setError('')
+    setSuccess('')
+    setLoading(true)
+
+    if (pdfFile) {
+      // Handle PDF upload
+      const formData = new FormData()
+      formData.append('file', pdfFile)
+
+      try {
+        const response = await axios.post(`${config.apiBaseUrl}/upload_pdf`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        setSuccess(response.data.message)
+        setPdfFile(null)
+        setWebsiteLink('')
+        setWebsiteLink2('')
+        setVideoLink('')
+      } catch (error) {
+        setError(`Error: ${error.response?.data?.error || error.message}`)
+      } finally {
+        setLoading(false)
+      }
+    } else if (websiteLink) {
+      // Handle Website Link 1
+      try {
+        const response = await axios.post(`${config.apiBaseUrl}/fetch_and_process`, {
+          url: websiteLink,
+        })
+        setSuccess(response.data.message)
+        setPdfFile(null)
+        setWebsiteLink('')
+        setWebsiteLink2('')
+        setVideoLink('')
+      } catch (error) {
+        setError(`Error: ${error.response?.data?.error || error.message}`)
+      } finally {
+        setLoading(false)
+      }
+    } else if (websiteLink2) {
+      // Handle Website Link 2
+      try {
+        const response = await axios.post(`${config.apiBaseUrl}/fetch_urls`, {
+          url: websiteLink2,
+        })
+        setSuccess(response.data.message)
+        setPdfFile(null)
+        setWebsiteLink('')
+        setWebsiteLink2('')
+        setVideoLink('')
+      } catch (error) {
+        setError(`Error: ${error.response?.data?.error || error.message}`)
+      } finally {
+        setLoading(false)
+      }
+    } else if (videoLink) {
+      // Handle Video Link for transcription
+      try {
+        const response = await axios.post(`${config.apiBaseUrl}/transcribe`, {
+          url: videoLink,
+        })
+        setSuccess(response.data.message)
+        setPdfFile(null)
+        setWebsiteLink('')
+        setWebsiteLink2('')
+        setVideoLink('')
+      } catch (error) {
+        setError(`Error: ${error.response?.data?.error || error.message}`)
+      } finally {
+        setLoading(false)
+      }
+    } else {
+      // If none of the fields are filled
+      setError(
+        'Please upload a PDF, enter a website link, or provide a video link before starting the embedding.',
+      )
+      setLoading(false)
+    }
+  }
+  const handleResetEmbedding = () => {
+    setPdfFile(null)
+    setWebsiteLink('')
+    setWebsiteLink2('')
+    setVideoLink('')
+    setError('')
+    setSuccess('')
+    setLoading(false)
+  }
 
   return (
     <CRow>
-      <CCol xs={12} lg={6}>
-        <CCard className="mb-4">
-          <CCardHeader>Users</CCardHeader>
+      <CCol>
+        <CCard>
+          <CCardHeader>
+            <h3>Frank Dashboard</h3>
+          </CCardHeader>
           <CCardBody>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead className="text-nowrap">
-                  <CTableRow>
-                    <CTableHeaderCell className="bg-body-tertiary text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">User</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary text-center">Email</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Last Activity</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary text-center">Sign-Ins</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {users.map((user, index) => (
-                    <CTableRow key={index}>
-                      <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={user.avatar || avatar1} status="success" />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{user.name}</div>
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        {user.email}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="small text-body-secondary text-nowrap">Last login</div>
-                        <div className="fw-semibold text-nowrap">{new Date(user.lastActivity).toLocaleString()}</div>
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        {user.signIns.length}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
-            )}
+            <CForm>
+              {error && <CAlert color="danger">{error}</CAlert>}
+              {success && (
+                <CAlert color="success" onClick={() => setSuccess('')}>
+                  {success}
+                </CAlert>
+              )}
+              {loading && (
+                <CAlert color="info">
+                  Embedding started, please wait. It could take a few minutes.{' '}
+                  <CSpinner size="sm" />
+                </CAlert>
+              )}
+              <div className="mb-3">
+                <CFormLabel htmlFor="pdfUpload" style={{ fontSize: '1.25rem' }}>
+                  Upload PDF
+                </CFormLabel>
+                <CFormInput type="file" id="pdfUpload" accept=".pdf" onChange={handlePdfChange} />
+              </div>
+              <div className="mb-3">
+                <CFormLabel htmlFor="websiteLink" style={{ fontSize: '1.25rem' }}>
+                  Upload Website Link
+                </CFormLabel>
+                <CFormInput
+                  type="url"
+                  id="websiteLink"
+                  value={websiteLink}
+                  onChange={handleWebsiteLinkChange}
+                />
+              </div>
+              <div className="mb-3">
+                <CFormLabel htmlFor="websiteLink2" style={{ fontSize: '1.25rem' }}>
+                  Upload Website Link (Multiple website pages)
+                </CFormLabel>
+                <CFormInput
+                  type="url"
+                  id="websiteLink2"
+                  value={websiteLink2}
+                  onChange={handleWebsiteLink2Change}
+                />
+              </div>
+              <div className="mb-3">
+                <CFormLabel htmlFor="videoLink" style={{ fontSize: '1.25rem' }}>
+                  Enter Video Link
+                </CFormLabel>
+                <CFormInput
+                  type="url"
+                  id="videoLink"
+                  value={videoLink}
+                  onChange={handleVideoLinkChange}
+                />
+              </div>
+              <CButton color="primary" onClick={handleStartEmbedding} style={{ marginTop: '10px' }}>
+                Start Embedding
+              </CButton>
+              <CButton
+                color="danger"
+                onClick={handleResetEmbedding}
+                style={{ marginLeft: '10px', marginTop: '10px' }}
+              >
+                Reset Embedding
+              </CButton>
+            </CForm>
           </CCardBody>
         </CCard>
       </CCol>
-      <CCol xs={12} lg={6}>
-        <MainChart users={users} />
-      </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

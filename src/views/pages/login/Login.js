@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
@@ -15,15 +15,43 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-import 'src/scss/_custom.scss';
+import 'src/scss/_custom.scss'
 
 const Login = () => {
+  const [fullName, setFullName] = useState('')
+  const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = () => {
-    // Add your login logic here (e.g., authentication check)
-    // If login is successful, navigate to the dashboard
-    navigate('/dashboard')
+  const handleLogin = async (e) => {
+    e.preventDefault()
+
+    const signInDto = {
+      FullName: fullName,
+      Password: password,
+    }
+
+    try {
+      const response = await fetch('http://192.168.1.184:7210/api/User/signinAdmin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signInDto),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        alert(data.error)
+      } else {
+        const data = await response.json()
+        console.log('User:', data.user)
+        console.log('Token:', data.token)
+        navigate('/dashboard')
+      }
+    } catch (error) {
+      alert('An unexpected error occurred')
+      console.error('Error:', error)
+    }
   }
 
   return (
@@ -34,14 +62,19 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleLogin}>
                     <h1>Login</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -51,11 +84,13 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={handleLogin}>
+                        <CButton type="submit" color="primary" className="px-4">
                           Login
                         </CButton>
                       </CCol>
@@ -73,8 +108,8 @@ const Login = () => {
                   <div>
                     <h2>Sign up</h2>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
+                      Welcome to Antonine university System designed This system control the
+                      university application
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
