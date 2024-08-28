@@ -208,7 +208,7 @@ const Dashboard = () => {
                 onClick={handleResetEmbedding}
                 style={{ marginLeft: '10px', marginTop: '10px' }}
               >
-                Reset Embedding
+                Reset Chat Context
               </CButton>
             </CForm>
           </CCardBody>

@@ -11,7 +11,7 @@ import {
   CFormSelect,
 } from '@coreui/react'
 import 'src/scss/_custom.scss'
-import config from './config'
+
 
 const UserManagement = () => {
   const [users, setUsers] = useState([])
