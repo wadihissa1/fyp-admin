@@ -26,7 +26,7 @@ const ApproveDocuments = () => {
   const fetchDocuments = async () => {
     try {
       const response = await fetch(
-        'http://192.168.1.184:7210/api/documents/adminDocuments?adminUserId=1',
+        'http://192.168.1.141:7210/api/documents/adminDocuments?adminUserId=4',
       )
       if (!response.ok) {
         throw new Error('Network response was not ok')
@@ -50,7 +50,7 @@ const ApproveDocuments = () => {
         formData.append('documentId', documentId)
         formData.append('adminUserId', 1)
 
-        const response = await fetch('http://192.168.1.184:7210/api/documents/approve', {
+        const response = await fetch('http://1192.168.1.141:7210/api/documents/approve', {
           method: 'POST',
           body: formData,
         })
@@ -87,7 +87,7 @@ const ApproveDocuments = () => {
       formData.append('adminUserId', 1)
       formData.append('note', note)
 
-      const response = await fetch('http://192.168.1.184:7210/api/documents/refuse', {
+      const response = await fetch('http://192.168.1.141:7210/api/documents/refuse', {
         method: 'POST',
         body: formData,
       })

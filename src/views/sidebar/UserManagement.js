@@ -21,7 +21,7 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://192.168.1.184:7210/api/User/admin')
+        const response = await fetch('http://192.168.1.141:7210/api/User/admin')
         if (!response.ok) {
           throw new Error('Network response was not ok')
         }
@@ -51,7 +51,7 @@ const UserManagement = () => {
   const updateUserDetails = async (userId) => {
     const user = users.find((user) => user.id === userId)
     try {
-      const response = await fetch(`http://192.168.1.184:7210/api/User/${userId}`, {
+      const response = await fetch(`http://192.168.1.141:7210/api/User/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const UserManagement = () => {
 
   const handleStatusChange = async (userId) => {
     try {
-      const response = await fetch(`http://192.168.1.184:7210/api/User/${userId}/toggle-status`, {
+      const response = await fetch(`http://192.168.1.141:7210/api/User/${userId}/toggle-status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
