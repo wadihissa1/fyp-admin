@@ -1,9 +1,5 @@
-// src/assets/scss/_custom.scss
-
-// Override the primary color
-$primary: #0F5CA8; // New primary color (example: a shade of blue)
-
-// You can also override other colors if needed
+// Override CoreUI Theme Colors
+$primary: #0F5CA8; // Custom primary color
 $secondary: #79aaff;
 $success: #28a745;
 $info: #17a2b8;
@@ -12,18 +8,62 @@ $danger: #dc3545;
 $light: #f8f9fa;
 $dark: #343a40;
 
+// Sidebar Header Styles
 .custom-sidebar-header {
-    background-color: #ffffff; /* Change this to your desired background color */
-    color: #fbfbfb; /* Change this to your desired text color */
-    padding: 10px; /* Adjust padding as needed */
+  background-color: #ffffff !important; /* Header background color */
+  color: #0F5CA8 !important; /* Header text color */
+  padding: 10px; /* Adjust padding for better spacing */
+}
+
+// Sidebar Styles
+.custom-sidebar {
+  background-color: #0F5CA8 !important; /* Sidebar background color */
+  color: #ffffff !important; /* Sidebar text color */
+
+  // Links and Text
+  a {
+    color: #ffffff !important; /* Link text color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+
+    &:hover {
+      color: #0F5CA8 !important; /* Hover text color */
+      background-color: rgba(255, 255, 255, 0.2); /* Subtle hover background effect */
+    }
   }
-  
-  .custom-sidebar {
-    background-color: #0F5CA8 !important; /* Change this to your desired background color */
-    color: #fff !important;/* Change this to your desired text color */
+
+  // Active Link Styling
+  a.active {
+    color: #79aaff !important; /* Active link text color */
+    font-weight: bold; /* Optional: Bold active link */
   }
-  
-  
+
+  // Sidebar Footer Styling
+  .c-sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    color: #ffffff !important; /* Footer text color */
+    background-color: #0c4b8f !important; /* Footer background color */
+  }
+}
+
+// Specific Styling for Light Mode
+.custom-sidebar.light-mode {
+  background-color: #0F5CA8 !important; /* Light background for sidebar */
+  color: #ececec !important; /* Darker text for readability */
+
+  a {
+    color: #2f2f2f !important; /* Link color in light mode */
+    &:hover {
+      color: #ffffff !important; /* Hover text color in light mode */
+      background-color: #0F5CA8 !important; /* Hover background in light mode */
+    }
+  }
+
+  .c-sidebar-footer {
+    color: #0F5CA8 !important; /* Footer text color */
+    background-color: #e9ecef !important; /* Footer background color */
+  }
+}
 
 // Import CoreUI variables and styles
 @import "@coreui/coreui/scss/coreui";

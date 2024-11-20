@@ -54,7 +54,7 @@ const CommunityManagement = () => {
   useEffect(() => {
     const fetchCommunities = async () => {
       try {
-        const response = await fetch('http://192.168.1.141:7210/api/Community/adminSubCommunities')
+        const response = await fetch('http://172.20.10.3:7210/api/Community/adminSubCommunities')
         if (!response.ok) {
           throw new Error('Network response was not ok')
         }
@@ -72,7 +72,7 @@ const CommunityManagement = () => {
     const fetchUsers = async (communityId) => {
       try {
         const response = await fetch(
-          `http://192.168.1.141:7210/api/User/GetUserNamesNotInSubCommunity/${communityId}`,
+          `http://172.20.10.3:7210/api/User/GetUserNamesNotInSubCommunity/${communityId}`,
         )
         if (!response.ok) {
           throw new Error('Network response was not ok')
@@ -94,7 +94,7 @@ const CommunityManagement = () => {
     const fetchUsersInSubCommunity = async (subCommunityId) => {
       try {
         const response = await fetch(
-          `http://192.168.1.141:7210/api/User/GetUserNamesInSubCommunity/${subCommunityId}`,
+          `http://172.20.10.3:7210/api/User/GetUserNamesInSubCommunity/${subCommunityId}`,
         )
         if (!response.ok) {
           throw new Error('Network response was not ok')
@@ -124,7 +124,7 @@ const CommunityManagement = () => {
   const toggleCommunityStatus = async (communityId) => {
     try {
       const response = await fetch(
-        `http://192.168.1.141:7210/api/Community/${communityId}/toggle-status`,
+        `http://172.20.10.3:7210/api/Community/${communityId}/toggle-status`,
         {
           method: 'PUT',
           headers: {
@@ -154,7 +154,7 @@ const CommunityManagement = () => {
   const confirmDelete = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.141:7210/api/Community/DeleteSubCommunity?subCommunityId=${communityToDelete}`,
+        `http://172.20.10.3:7210/api/Community/DeleteSubCommunity?subCommunityId=${communityToDelete}`,
         {
           method: 'DELETE',
         },
@@ -188,7 +188,7 @@ const CommunityManagement = () => {
 
     try {
       const response = await fetch(
-        'http://192.168.1.141:7210/api/Community/CreateAdminSubCommunity',
+        'http://172.20.10.3:7210/api/Community/CreateAdminSubCommunity',
         {
           method: 'POST',
           body: formData,
@@ -213,7 +213,7 @@ const CommunityManagement = () => {
 
       // Refetch communities
       const communitiesResponse = await fetch(
-        'http://192.168.1.141:7210/api/Community/adminSubCommunities',
+        'http://172.20.10.3:7210/api/Community/adminSubCommunities',
       )
       const communitiesData = await communitiesResponse.json()
       setCommunities(communitiesData)
@@ -225,7 +225,7 @@ const CommunityManagement = () => {
   const handleAddUsers = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.141:7210/api/Community/AddUsersToSubCommunity/${selectedCommunity}`,
+        `http://172.20.10.3:7210/api/Community/AddUsersToSubCommunity/${selectedCommunity}`,
         {
           method: 'POST',
           headers: {
@@ -239,7 +239,7 @@ const CommunityManagement = () => {
       }
       // Refetch the list of users not in the subcommunity
       const usersResponse = await fetch(
-        `http://192.168.1.141:7210/api/User/GetUserNamesNotInSubCommunity/${selectedCommunity}`,
+        `http://172.20.10.3:7210/api/User/GetUserNamesNotInSubCommunity/${selectedCommunity}`,
       )
       if (!usersResponse.ok) {
         throw new Error('Network response was not ok')
@@ -250,7 +250,7 @@ const CommunityManagement = () => {
 
       // Refetch the list of users in the subcommunity
       const usersInSubCommunityResponse = await fetch(
-        `http://192.168.1.141:7210/api/User/GetUserNamesInSubCommunity/${selectedCommunity}`,
+        `http://172.20.10.3:7210/api/User/GetUserNamesInSubCommunity/${selectedCommunity}`,
       )
       if (!usersInSubCommunityResponse.ok) {
         throw new Error('Network response was not ok')
@@ -269,7 +269,7 @@ const CommunityManagement = () => {
   const handleRemoveUsers = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.141:7210/api/Community/RemoveUsersFromSubCommunity/${selectedCommunity}`,
+        `http://172.20.10.3:7210/api/Community/RemoveUsersFromSubCommunity/${selectedCommunity}`,
         {
           method: 'POST',
           headers: {
@@ -283,7 +283,7 @@ const CommunityManagement = () => {
       }
       // Refetch the list of users not in the subcommunity
       const usersResponse = await fetch(
-        `http://192.168.1.141:7210/api/User/GetUserNamesNotInSubCommunity/${selectedCommunity}`,
+        `http://172.20.10.3:7210/api/User/GetUserNamesNotInSubCommunity/${selectedCommunity}`,
       )
       if (!usersResponse.ok) {
         throw new Error('Network response was not ok')
@@ -294,7 +294,7 @@ const CommunityManagement = () => {
 
       // Refetch the list of users in the subcommunity
       const usersInSubCommunityResponse = await fetch(
-        `http://192.168.1.141:7210/api/User/GetUserNamesInSubCommunity/${selectedCommunity}`,
+        `http://172.20.10.3:7210/api/User/GetUserNamesInSubCommunity/${selectedCommunity}`,
       )
       if (!usersInSubCommunityResponse.ok) {
         throw new Error('Network response was not ok')

@@ -130,14 +130,25 @@ const Dashboard = () => {
       setLoading(false)
     }
   }
-  const handleResetEmbedding = () => {
+  const handleResetEmbedding = async () => {
     setPdfFile(null)
     setWebsiteLink('')
     setWebsiteLink2('')
     setVideoLink('')
     setError('')
     setSuccess('')
-    setLoading(false)
+    setLoading(true)
+  
+    try {
+      const response = await axios.post(`${config.apiBaseUrl}/reset`, {
+        url: videoLink, // Use the current videoLink value
+      })
+      setSuccess(`Chat context reset successfully: ${response.data.message}`)
+    } catch (error) {
+      setError(`Error resetting chat context: ${error.response?.data?.error || error.message}`)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

@@ -22,7 +22,26 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = async (e) => {
+  const mockLogin = (credentials) => {
+    // Mock user data
+    const mockUser = {
+      fullName: 'admin',
+      password: '123456',
+      user: { id: 1, name: 'Admin User' },
+      token: 'mock-token-123456',
+    }
+
+    if (
+      credentials.FullName === mockUser.fullName &&
+      credentials.Password === mockUser.password
+    ) {
+      return { success: true, user: mockUser.user, token: mockUser.token }
+    }
+
+    return { success: false, error: 'Invalid credentials' }
+  }
+
+  const handleLogin = (e) => {
     e.preventDefault()
 
     const signInDto = {
@@ -30,27 +49,31 @@ const Login = () => {
       Password: password,
     }
 
-    try {
-      const response = await fetch('http://192.168.1.184:7210/api/User/signinAdmin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(signInDto),
-      })
+    const result = mockLogin(signInDto)
 
-      if (!response.ok) {
-        const data = await response.json()
-        alert(data.error)
-      } else {
-        const data = await response.json()
-        console.log('User:', data.user)
-        console.log('Token:', data.token)
-        navigate('/dashboard')
-      }
-    } catch (error) {
-      alert('An unexpected error occurred')
-      console.error('Error:', error)
+    if (result.success) {
+      console.log('User:', result.user)
+      console.log('Token:', result.token)
+      navigate('/dashboard')
+    } else {
+      alert(result.error)
+    }
+  }
+
+  const loginAsAdmin = () => {
+    const adminCredentials = {
+      FullName: 'admin',
+      Password: '123456',
+    }
+
+    const result = mockLogin(adminCredentials)
+
+    if (result.success) {
+      console.log('Admin User:', result.user)
+      console.log('Token:', result.token)
+      navigate('/dashboard')
+    } else {
+      alert(result.error)
     }
   }
 
@@ -95,8 +118,13 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
+                        <CButton
+                          type="button"
+                          color="secondary"
+                          className="px-4"
+                          onClick={loginAsAdmin}
+                        >
+                          Login as Admin
                         </CButton>
                       </CCol>
                     </CRow>
