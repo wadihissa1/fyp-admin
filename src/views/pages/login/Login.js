@@ -1,3 +1,4 @@
+import fullualogo from 'src/assets/brand/fullualogo.png'  
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
@@ -12,6 +13,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CImage,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
@@ -22,58 +24,34 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const mockLogin = (credentials) => {
-    // Mock user data
-    const mockUser = {
-      fullName: 'admin',
-      password: '123456',
-      user: { id: 1, name: 'Admin User' },
-      token: 'mock-token-123456',
-    }
-
-    if (
-      credentials.FullName === mockUser.fullName &&
-      credentials.Password === mockUser.password
-    ) {
-      return { success: true, user: mockUser.user, token: mockUser.token }
-    }
-
-    return { success: false, error: 'Invalid credentials' }
-  }
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
 
     const signInDto = {
-      FullName: fullName,
-      Password: password,
+      username: fullName,
+      password: password,
     }
 
-    const result = mockLogin(signInDto)
+    try {
+      const response = await fetch('http://192.168.0.105:5000/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signInDto),
+      })
 
-    if (result.success) {
-      console.log('User:', result.user)
-      console.log('Token:', result.token)
-      navigate('/dashboard')
-    } else {
-      alert(result.error)
-    }
-  }
+      const result = await response.json()
 
-  const loginAsAdmin = () => {
-    const adminCredentials = {
-      FullName: 'admin',
-      Password: '123456',
-    }
-
-    const result = mockLogin(adminCredentials)
-
-    if (result.success) {
-      console.log('Admin User:', result.user)
-      console.log('Token:', result.token)
-      navigate('/dashboard')
-    } else {
-      alert(result.error)
+      if (response.ok) {
+        console.log('User logged in successfully:', result)
+        navigate('/dashboard') // Navigate to dashboard on success
+      } else {
+        alert(result.error || 'Login failed') // Show error message
+      }
+    } catch (error) {
+      console.error('Error during login:', error)
+      alert('An error occurred during login. Please try again.')
     }
   }
 
@@ -85,8 +63,20 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
+                  {/* Logo Image */}
+                  <CImage
+                    src={fullualogo}
+                    alt="Full UA Logo"
+                    className="mb-4"
+                    style={{
+                      display: 'block',
+                      margin: '0 auto',
+                      maxWidth: '200px',
+                      height: 'auto',
+                    }}
+                  />
                   <CForm onSubmit={handleLogin}>
-                    <h1>Login</h1>
+                    <h1>Login to Frank Admin</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -117,34 +107,8 @@ const Login = () => {
                           Login
                         </CButton>
                       </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton
-                          type="button"
-                          color="secondary"
-                          className="px-4"
-                          onClick={loginAsAdmin}
-                        >
-                          Login as Admin
-                        </CButton>
-                      </CCol>
                     </CRow>
                   </CForm>
-                </CCardBody>
-              </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Welcome to Antonine university System designed This system control the
-                      university application
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
                 </CCardBody>
               </CCard>
             </CCardGroup>
