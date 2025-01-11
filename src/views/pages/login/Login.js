@@ -33,7 +33,7 @@ const Login = () => {
     }
     
     try {
-      const response = await fetch('http://20.49.30.0:80/signin', {
+      const response = await fetch('https://20.49.30.0/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
